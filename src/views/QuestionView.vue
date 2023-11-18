@@ -4,7 +4,6 @@ import axios from "axios";
 
 export default {
     setup() {
-        const x = "lole";
         const categories = ref(null);
 
         onMounted(() => {
@@ -21,7 +20,6 @@ export default {
             }
         }
         return {
-            x,
             categories
         }
     }
@@ -29,10 +27,6 @@ export default {
 </script>
 
 <template>
-    <ul>
-        <li v-for="category in categories" :key="category.id">
-            {{ category.name }}
-        </li>
-    </ul>
+    <h3>Question: </h3>
 </template>
 <style></style>

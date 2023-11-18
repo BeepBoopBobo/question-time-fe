@@ -6,11 +6,11 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
 <template>
   <header>
     <nav>
-      <RouterLink to="/">How to</RouterLink>
-      <RouterLink to="/categories-management">Manage Categories</RouterLink>
-      <RouterLink to="/teams-management">Manage Teams</RouterLink>
-      <RouterLink to="/categories">Play</RouterLink>
-      <a href="http://localhost:3000/api-docs">Swagger</a>
+      <RouterLink class="nav-link" to="/">How to</RouterLink>
+      <RouterLink class="nav-link" to="/manage-categories">Manage Categories</RouterLink>
+      <RouterLink class="nav-link" to="/manage-teams">Manage Teams</RouterLink>
+      <RouterLink class="nav-link" to="/categories">Play</RouterLink>
+      <a class="nav-link" href="http://localhost:3000/api-docs">Swagger</a>
     </nav>
 
     <div id="teams">
@@ -24,5 +24,16 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
 <style>
 nav {
   color: white;
+  background-color: bisque;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: red;
 }
 </style>

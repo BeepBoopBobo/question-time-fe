@@ -149,13 +149,15 @@ export default {
             },
         ];
         onMounted(() => {
-            fetchCategories();
+            fetchSelectedCategories();
         });
+
+        //temp
         function addPoints() {
-            console.log("adding points");
             game.addPointsToTeam("ABC", 100);
         }
-        async function fetchCategories() {
+
+        async function fetchSelectedCategories() {
             try {
                 const response = await axios.get('http://localhost:3000/api/categories/');
                 categories.value = response.data;
