@@ -29,16 +29,15 @@ export const useGameStore = defineStore("game", {
     },
     actions: {
         addPointsToTeam(team, pointAmount) {
-            console.log('adding points to', team)
             const pointsTo = this.teams.find(t => t.name == team);
             pointsTo.score += pointAmount;
         },
         toggleCategory(passedCategory) {
-            if (this.selectedCategories.length <= 5) {
-                const indexOfCategory = this.selectedCategories.indexOf(category => category == passedCategory);
-                indexOfCategory != undefined ?
+            if (this.selectedCategories.length < 5) {
+                const indexOfCategory = this.selectedCategories.indexOf(passedCategory);
+                indexOfCategory != -1 ?
                     this.selectedCategories.splice(indexOfCategory, 1) :
-                    this.selectedCategories.push(this.passedCategory)
+                    this.selectedCategories.push(passedCategory)
             }
         },
         addTeam(teamObj) {
