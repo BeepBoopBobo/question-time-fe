@@ -57,6 +57,6 @@ export const useGameStore = defineStore("game", {
     getters: {
         getTeams() { return this.teams },
         getTurn() { return this.turn },
-        getCategories() { return this.selectedCategories },
+        getSelectedCategories() { return this.selectedCategories },
     }
 })

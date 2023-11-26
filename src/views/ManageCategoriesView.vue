@@ -60,10 +60,10 @@ export default {
         });
         const categoriesList = ref([]);
         const selectedCategories = computed(() => game.getCategories);
-        const selectedLength = computed(() => selectedCategories.value.length);
+        const selectedLength = computed(() => selectedCategories.value?.length);
 
-        function toggleCategory(name) {
-            game.toggleCategory(name);
+        function toggleCategory(identifier) {
+            game.toggleCategory(identifier);
         }
 
         async function uploadFromFile(event) {

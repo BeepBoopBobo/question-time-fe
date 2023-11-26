@@ -1,32 +1,52 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from 'vue-router';
 import axios from "axios";
+import { useGameStore } from "../stores/game";
 
 export default {
     setup() {
-        const categories = ref(null);
-
+        const route = useRoute();
+        const questionId = computed(() => route.params.id);
+        const question = ref({});
+        const x = ref([]);
+        const game = useGameStore();
         onMounted(() => {
-            fetchCategories();
+            fetchQuestion();
         })
 
-        async function fetchCategories() {
-            try {
-                const response = await axios.get('http://localhost:3000/api/categories/');
-                categories.value = response.data;
-                console.log("resp", response.data);
-            } catch (error) {
-                console.error('Error fetching players:', error);
-            }
+        async function fetchQuestion() {
+            const selectedIds = game.getSelectedCategories;
+            selectedIds.forEach(async item => {
+                try {
+                    const response = await axios.get(`http://localhost:3000/api/categories/${item}`);
+                    let questions = response.data.searchedCategory.questions;
+                    questions.forEach(q => {
+                        if (q.id == questionId.value) {
+                            question.value = q;
+                        }
+                    })
+                    console.log("resp", response.data);
+                }
+                catch (error) {
+                    console.error('Error fetching players:', error);
+                }
+            })
         }
         return {
-            categories
+            question,
+            questionId,
+            game,
+            x
         }
     }
 }
 </script>
 
 <template>
-    <h3>Question: </h3>
+    <h3>Question: {{ question.name }}</h3>
+    <div id="answers">
+        <button class="answer-btn" v-for="answer in question.answers" :key="answer.id">{{ answer }}</button>
+    </div>
 </template>
 <style></style>
