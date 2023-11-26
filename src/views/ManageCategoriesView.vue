@@ -73,17 +73,23 @@ export default {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     fileContent.value = e.target.result;
-
                 };
                 reader.readAsText(selectedFile);
             }
         }
 
         async function addCategoriesFromFile() {
-            console.log(fileContent.value);
+            const formData = new FormData();
+            formData.append('categories', fileContent.value);
             try {
-                const response = await axios.post('http://localhost:3000/api/categories/', { categories: fileContent.value });
+                const response = await axios.post('http://localhost:3000/api/categories/', formData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
                 fetchAllCategories();
+                console.log(response);
             } catch (error) {
                 console.error(`Error while creating category ${newCategory.value._id}:`, error.message);
             }
@@ -197,7 +203,7 @@ export default {
             <font-awesome-icon icon="fa-solid fa-plus" /> Create
         </button>
     </div>
-    <input type="file" @change="uploadFromFile">
+    <input type="file" @change="uploadFromFile" accept="application/JSON">
     <button @click="addCategoriesFromFile">Upload file</button>
 </template>
 
