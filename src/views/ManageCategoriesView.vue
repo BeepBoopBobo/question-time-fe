@@ -5,14 +5,16 @@ import { useGameStore } from "../stores/game";
 
 export default {
     setup() {
+        const editingCategory = ref(false);
+        const creatingCategory = ref(false);
         const game = useGameStore();
         const fileContent = ref(null);
-        const newCategory = ref({
-            _id: '',
+        const categoryForm = ref({
+            id: '',
             name: '',
             questions: [
                 {
-                    _id: '',
+                    id: '',
                     name: '',
                     value: 800,
                     image: '',
@@ -21,7 +23,7 @@ export default {
                     correct_answer: '',
                 },
                 {
-                    _id: '',
+                    id: '',
                     name: '',
                     value: 500,
                     image: '',
@@ -30,7 +32,7 @@ export default {
                     correct_answer: '',
                 },
                 {
-                    _id: '',
+                    id: '',
                     name: '',
                     value: 300,
                     image: '',
@@ -39,7 +41,7 @@ export default {
                     correct_answer: '',
                 },
                 {
-                    _id: '',
+                    id: '',
                     name: '',
                     value: 200,
                     image: '',
@@ -48,7 +50,7 @@ export default {
                     correct_answer: '',
                 },
                 {
-                    _id: '',
+                    id: '',
                     name: '',
                     value: 100,
                     image: '',
@@ -59,13 +61,47 @@ export default {
             ]
         });
         const categoriesList = ref([]);
-        const selectedCategories = computed(() => game.getCategories);
-        const selectedLength = computed(() => selectedCategories.value?.length);
+        const selectedCategories = ref(game.getSelectedCategories);
+
+        function clearInputs() {
+            let newObj = {}
+            let values = [800, 500, 300, 200, 100];
+            newObj.id = '';
+            newObj.name = '';
+            newObj.questions = [];
+            values.forEach((val) => {
+                let questionObj = {};
+                questionObj.value = val;
+                questionObj.name = '';
+                questionObj.id = '';
+                questionObj.correct_answer = '';
+                questionObj.answers = ['', '', '', ''];
+                newObj.questions.push(questionObj);
+            })
+            categoryForm.value = { ...newObj };
+        }
 
         function toggleCategory(identifier) {
             game.toggleCategory(identifier);
         }
 
+        function editCategory(identifier) {
+            editingCategory.value = true;
+            const x = categoriesList.value.find(item => item._id == identifier);
+            categoryForm.value = { ...x };
+        }
+
+        function addCategory() {
+            creatingCategory.value = true;
+        }
+        function exitModal() {
+            editingCategory.value = false;
+            creatingCategory.value = false;
+            clearInputs();
+        }
+        function isIncluded(identifier) {
+            return selectedCategories.value?.some(category => category == identifier)
+        }
         async function uploadFromFile(event) {
             const files = event.target.files;
             if (files.length > 0) {
@@ -90,18 +126,27 @@ export default {
 
                 fetchAllCategories();
                 console.log(response);
+                exitModal();
             } catch (error) {
-                console.error(`Error while creating category ${newCategory.value._id}:`, error.message);
+                console.error(`Error while creating category ${categoryForm.value._id}:`, error.message);
             }
         }
 
-        async function addCategory() {
+        async function submitCategory(method) {
             try {
-                const response = await axios.post('http://localhost:3000/api/category/', newCategory.value);
+                const response =
+                    method == 'create' ?
+                        await axios.post('http://localhost:3000/api/category/', categoryForm.value) :
+                        await axios.put('http://localhost:3000/api/category/', categoryForm.value);
                 fetchAllCategories();
+                exitModal();
             } catch (error) {
-                console.error(`Error while creating category ${newCategory.value._id}:`, error.message);
+                console.error(`Error while ${method == 'create' ? 'creating' : 'editing'} category ${categoryForm.value._id}:`, error.message);
+                creatingCategory.value = false;
+                editingCategory.value = false;
             }
+            creatingCategory.value = false;
+            editingCategory.value = false;
         }
 
         async function removeCategory(categoryID) {
@@ -129,22 +174,79 @@ export default {
         })
 
         return {
-            newCategory,
+            categoryForm,
+            editingCategory,
+            creatingCategory,
+            fileContent,
+            submitCategory,
+            clearInputs,
             addCategory,
             removeCategory,
             uploadFromFile,
             addCategoriesFromFile,
-            selectedLength,
             selectedCategories,
             categoriesList,
-            toggleCategory
+            toggleCategory,
+            isIncluded,
+            editCategory,
+            exitModal
         }
     }
 }
 </script>
 <template>
+    <button @click="clearInputs">CLEAR</button>
+    <div v-if="editingCategory || creatingCategory" class="modal">
+        <div id="add-category-form">
+            <button @click="exitModal" class="btn-exit-modal"><font-awesome-icon icon="fa-solid fa-x" /></button>
+            <label class="form-label">Category:
+                <input class="form-input" type="text" v-model="categoryForm.name">
+            </label>
+            <label class="form-label"> ID:
+                <input class="form-input" type="text" v-model="categoryForm.id">
+            </label>
+            <div class="question-form" v-for="question in categoryForm.questions" :key="question.id">
+                <label class="form-label"> Question for {{ question.value }}:
+                    <input class="form-input" type="text" v-model="question.name">
+                </label>
+                <div class="question-answers">
+                    <span class="questions-title">Answers:</span>
+                    <label v-for="answer, index in question.answers" :key="index" class="question-answer">
+                        <input class="form-input" type="text" v-model="question.answers[index]">
+                    </label>
+                    <label class="form-label">
+                        Correct Answer:
+                        <select v-model="question.correct_answer">
+                            <option v-for="answer, index in question.answers" :key="index">{{ answer }}</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div v-if="creatingCategory">
+                <div class="file-input">
+                    <label>
+                        Select JSON file
+                        <input type="file" @change="uploadFromFile" accept="application/JSON">
+                    </label>
+                    <button :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">Upload
+                        file</button>
+                </div>
+
+                <button @click="submitCategory('create')" class="confirm-modal">
+                    <font-awesome-icon icon="fa-solid fa-plus" /> Create category
+                </button>
+
+            </div>
+            <div v-else-if="editingCategory">
+                <button @click="submitCategory('edit')" class="confirm-modal">
+                    <font-awesome-icon icon="fa-solid fa-check" /> Confirm category
+                </button>
+            </div>
+        </div>
+    </div>
+
     <h3>Manage Categories</h3>
-    <span>Selected: {{ selectedLength }}/5</span>
+    <span>Selected: {{ selectedCategories.length }}/5</span>
     <table id="categories-table">
         <tr>
             <th>Name</th>
@@ -158,10 +260,13 @@ export default {
                     {{ category.name }}
                 </td>
                 <td>
-                    -
+                    <button @click="editCategory(category._id)"><font-awesome-icon icon="fa-solid fa-pen" /></button>
                 </td>
                 <td>
-                    <input type="checkbox" @click="toggleCategory(category._id)" />
+                    <button @click="toggleCategory(category._id)">
+                        <font-awesome-icon v-if="isIncluded(category._id)" icon="fa-solid fa-square-check" />
+                        <font-awesome-icon v-else icon="fa-solid fa-square" />
+                    </button>
                 </td>
                 <td>
                     <button @click="removeCategory(category._id)">
@@ -175,48 +280,79 @@ export default {
             <span>There are no categories.</span>
         </template>
     </table>
-
-    <div id="add-category-form">
-        <label class="form-label"> ID:
-            <input class="form-input" type="text" v-model="newCategory._id">
-        </label>
-        <label class="form-label">Category:
-            <input class="form-input" type="text" v-model="newCategory.name">
-        </label>
-        <div class="question-form" v-for="question in newCategory.questions" :key="question._id">
-            <span>{{ question.value }}</span>
-            <label class="form-label"> Question:
-                <input class="form-input" type="text" v-model="question.name">
-            </label>
-            <label v-for="answer, index in question.answers" :key="index">
-                Answer #{{ index + 1 }}:
-                <input class="form-input" type="text" v-model="question.answers[index]">
-            </label>
-            <label class="form-label">
-                Correct Answer:
-                <select v-model="question.correct_answer">
-                    <option v-for="answer, index in question.answers" :key="index">{{ answer }}</option>
-                </select>
-            </label>
-        </div>
-        <button @click="addCategory">
-            <font-awesome-icon icon="fa-solid fa-plus" /> Create
-        </button>
-    </div>
-    <input type="file" @change="uploadFromFile" accept="application/JSON">
-    <button @click="addCategoriesFromFile">Upload file</button>
+    <button @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create Category</button>
 </template>
 
 <style>
+.non-valid {
+    color: gray;
+    pointer-events: none;
+}
+
+.file-input {
+    width: 100%;
+}
+
+.confirm-modal {
+    margin-top: 2rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.btn-exit-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+.file-input>input {
+    display: none;
+}
+
 #add-category-form {
-    width: 250px;
+    position: relative;
+    text-align: center;
+    width: 400px;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem;
+    background-color: white;
+    margin: auto;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    border-radius: 0.8rem;
 }
 
 .question-form {
-    margin-top: 1rem;
-    margin-left: 0.5rem;
+    margin-top: 2rem;
+}
+
+.questions-title {
+    width: 100%;
+}
+
+.question-answers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.question-answer {
+    width: 40%;
+    padding: 0.5rem;
+
 }
 
 .form-label,

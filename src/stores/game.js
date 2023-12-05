@@ -1,32 +1,31 @@
 import { defineStore } from "pinia";
 
-export const useGameStore = defineStore("game", {
-    state: () => {
-        return {
-            turn: 0,
-            selectedCategories: [],
-            teams: [
-                {
-                    name: "ABC",
-                    color: "#fff",
-                    order: 0,
-                    score: 0,
-                },
-                {
-                    name: "123",
-                    color: "#3d3d3d",
-                    order: 1,
-                    score: 0,
-                },
-                {
-                    name: "XYZ",
-                    color: "#AA1560",
-                    order: 2,
-                    score: 0,
-                },
-            ]
-        }
-    },
+export const useGameStore = defineStore({
+    id: "game",
+    state: () => ({
+        turn: 0,
+        selectedCategories: [],
+        teams: [
+            {
+                name: "ABC",
+                color: "#fff",
+                order: 0,
+                score: 0,
+            },
+            {
+                name: "123",
+                color: "#3d3d3d",
+                order: 1,
+                score: 0,
+            },
+            {
+                name: "XYZ",
+                color: "#AA1560",
+                order: 2,
+                score: 0,
+            },
+        ]
+    }),
     actions: {
         addPointsToTeam(team, pointAmount) {
             const pointsTo = this.teams.find(t => t.name == team);
