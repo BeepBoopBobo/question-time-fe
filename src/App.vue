@@ -33,6 +33,16 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
   bottom: 0;
   left: 0;
   right: 0;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 255, 0.1) 2px, transparent 1px),
+    /*radial-gradient(circle at center, var(--dark) 30%, transparent 31%),*/
+    linear-gradient(to right, rgba(0, 0, 255, 0.6) 5px, transparent 1px);
+  background-repeat: repeat-y;
+  background-size: 100% 2.5rem,
+    /*4rem 4rem,*/
+    90% 2.5rem;
+  background-position: right top,
+    /*left bottom,*/
+    right bottom;
 }
 
 nav {
