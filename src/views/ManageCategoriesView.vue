@@ -195,80 +195,71 @@ export default {
 }
 </script>
 <template>
-    <button @click="clearInputs">CLEAR</button>
-    <div v-if="editingCategory || creatingCategory" class="modal">
-        <div id="add-category-form">
-            <button @click="exitModal" class="btn-exit-modal"><font-awesome-icon icon="fa-solid fa-x" /></button>
-            <label class="form-label">Category:
-                <input class="form-input" type="text" v-model="categoryForm.name">
-            </label>
-            <label class="form-label"> ID:
-                <input class="form-input" type="text" v-model="categoryForm.id">
-            </label>
-            <div class="question-form" v-for="question in categoryForm.questions" :key="question.id">
-                <label class="form-label"> Question for {{ question.value }}:
-                    <input class="form-input" type="text" v-model="question.name">
+    <Teleport v-if="editingCategory || creatingCategory" to="body">
+        <div class="modal">
+            <div id="add-category-form">
+                <button @click="exitModal" class="btn-exit-modal"><font-awesome-icon icon="fa-solid fa-x" /></button>
+                <label class="form-label">Category:
+                    <input class="form-input" type="text" v-model="categoryForm.name">
                 </label>
-                <div class="question-answers">
-                    <span class="questions-title">Answers:</span>
-                    <label v-for="answer, index in question.answers" :key="index" class="question-answer">
-                        <input class="form-input" type="text" v-model="question.answers[index]">
+                <label class="form-label"> ID:
+                    <input class="form-input" type="text" v-model="categoryForm.id">
+                </label>
+                <div class="question-form" v-for="question in categoryForm.questions" :key="question.id">
+                    <label class="form-label"> Question for {{ question.value }}:
+                        <input class="form-input" type="text" v-model="question.name">
                     </label>
-                    <label class="form-label">
-                        Correct Answer:
-                        <select v-model="question.correct_answer">
-                            <option v-for="answer, index in question.answers" :key="index">{{ answer }}</option>
-                        </select>
-                    </label>
+                    <div class="question-answers">
+                        <span class="questions-title">Answers:</span>
+                        <label v-for="answer, index in question.answers" :key="index" class="question-answer">
+                            <input class="form-input" type="text" v-model="question.answers[index]">
+                        </label>
+                        <label class="form-label">
+                            Correct Answer:
+                            <select v-model="question.correct_answer">
+                                <option v-for="answer, index in question.answers" :key="index">{{ answer }}</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div v-if="creatingCategory">
-                <div class="file-input">
-                    <label>
-                        Select JSON file
-                        <input type="file" @change="uploadFromFile" accept="application/JSON">
-                    </label>
-                    <button :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">Upload
-                        file</button>
+                <div v-if="creatingCategory">
+                    <button @click="submitCategory('create')" class="confirm-modal">
+                        <font-awesome-icon icon="fa-solid fa-plus" /> Create category
+                    </button>
+
                 </div>
-
-                <button @click="submitCategory('create')" class="confirm-modal">
-                    <font-awesome-icon icon="fa-solid fa-plus" /> Create category
-                </button>
-
-            </div>
-            <div v-else-if="editingCategory">
-                <button @click="submitCategory('edit')" class="confirm-modal">
-                    <font-awesome-icon icon="fa-solid fa-check" /> Confirm category
-                </button>
+                <div v-else-if="editingCategory">
+                    <button @click="submitCategory('edit')" class="confirm-modal">
+                        <font-awesome-icon icon="fa-solid fa-check" /> Confirm changes
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-
+    </Teleport>
     <h3>Manage Categories</h3>
     <span>Selected: {{ selectedCategories.length }}/5</span>
     <table id="categories-table">
         <tr>
-            <th>Name</th>
-            <th>Edit</th>
-            <th>Select</th>
-            <th>Delete</th>
+            <th class="table-cell">Select</th>
+            <th class="table-cell-name">Name</th>
+            <th class="table-cell">Edit</th>
+            <th class="table-cell">Delete</th>
         </tr>
         <template v-if="categoriesList.length">
             <tr v-for="category, index in categoriesList" :key="index">
-                <td>
-                    {{ category.name }}
-                </td>
-                <td>
-                    <button @click="editCategory(category._id)"><font-awesome-icon icon="fa-solid fa-pen" /></button>
-                </td>
-                <td>
+                <td class="table-cell">
                     <button @click="toggleCategory(category._id)">
                         <font-awesome-icon v-if="isIncluded(category._id)" icon="fa-solid fa-square-check" />
                         <font-awesome-icon v-else icon="fa-solid fa-square" />
                     </button>
                 </td>
-                <td>
+                <td class="table-cell-name">
+                    {{ category.name }}
+                </td>
+                <td class="table-cell">
+                    <button @click="editCategory(category._id)"><font-awesome-icon icon="fa-solid fa-pen" /></button>
+                </td>
+                <td class="table-cell">
                     <button @click="removeCategory(category._id)">
                         <font-awesome-icon icon="fa-solid fa-trash" />
                     </button>
@@ -281,9 +272,34 @@ export default {
         </template>
     </table>
     <button @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create Category</button>
+    <div class="file-input">
+        <label>
+            Select JSON file
+            <input type="file" @change="uploadFromFile" accept="application/JSON">
+        </label>
+        <button :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">Upload
+            file</button>
+    </div>
 </template>
 
 <style>
+.table-cell {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+#categories-table {
+    width: 60%;
+    margin: auto;
+    border: 1px solid black;
+}
+
+#categories-table,
+td,
+th {
+    border: 1px solid gray;
+}
+
 .non-valid {
     color: gray;
     pointer-events: none;
@@ -311,7 +327,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    height: fit-content;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.85);
 }
 
@@ -321,7 +337,6 @@ export default {
 
 #add-category-form {
     position: relative;
-    text-align: center;
     width: 400px;
     display: flex;
     flex-wrap: wrap;
@@ -332,6 +347,8 @@ export default {
     margin-top: 3rem;
     margin-bottom: 3rem;
     border-radius: 0.8rem;
+    max-height: 80%;
+    overflow: scroll;
 }
 
 .question-form {

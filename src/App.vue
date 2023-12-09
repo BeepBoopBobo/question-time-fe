@@ -18,10 +18,23 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
     </div>
 
   </header>
-  <router-view></router-view>
+  <div id="notepad-paper">
+    <router-view></router-view>
+  </div>
 </template>
 
 <style>
+#notepad-paper {
+  background-color: var(--beige);
+  width: 80%;
+  margin: auto;
+  height: 80vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 nav {
   color: white;
   background-color: bisque;
