@@ -236,8 +236,11 @@ export default {
             </div>
         </div>
     </Teleport>
-    <h3>Manage Categories</h3>
-    <span>Selected: {{ selectedCategories.length }}/5</span>
+    <h3 class="green-highlight"><span class="highlight">Manage Categories</span></h3>
+    <div>
+        <span>Selected: {{ selectedCategories.length }}/5</span>
+    </div>
+
     <table id="categories-table">
         <tr>
             <th class="table-cell">Select</th>
@@ -248,7 +251,7 @@ export default {
         <template v-if="categoriesList.length">
             <tr v-for="category, index in categoriesList" :key="index">
                 <td class="table-cell">
-                    <button @click="toggleCategory(category._id)">
+                    <button class="btn" @click="toggleCategory(category._id)">
                         <font-awesome-icon v-if="isIncluded(category._id)" icon="fa-solid fa-square-check" />
                         <font-awesome-icon v-else icon="fa-solid fa-square" />
                     </button>
@@ -257,10 +260,11 @@ export default {
                     {{ category.name }}
                 </td>
                 <td class="table-cell">
-                    <button @click="editCategory(category._id)"><font-awesome-icon icon="fa-solid fa-pen" /></button>
+                    <button class="btn" @click="editCategory(category._id)"><font-awesome-icon
+                            icon="fa-solid fa-pen" /></button>
                 </td>
                 <td class="table-cell">
-                    <button @click="removeCategory(category._id)">
+                    <button class="btn" @click="removeCategory(category._id)">
                         <font-awesome-icon icon="fa-solid fa-trash" />
                     </button>
                 </td>
@@ -271,68 +275,23 @@ export default {
             <span>There are no categories.</span>
         </template>
     </table>
-    <button @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create Category</button>
-    <div class="file-input">
-        <label>
+    <button class="btn btn-fill margin-top" @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create
+        Category</button>
+    <div class="file-input btn-group margin-top">
+        <label class="btn btn-fill">
             Select JSON file
-            <input type="file" @change="uploadFromFile" accept="application/JSON">
+            <input class="hidden " type="file" @change="uploadFromFile" accept="application/JSON">
         </label>
-        <button :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">Upload
-            file</button>
+        <button class="btn btn-fill" :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">
+            Upload file
+        </button>
     </div>
 </template>
 
 <style>
-.table-cell {
-    width: 2.5rem;
-    height: 2.5rem;
-}
-
-#categories-table {
-    width: 60%;
-    margin: auto;
-    border: 1px solid black;
-}
-
-#categories-table,
-td,
-th {
-    border: 1px solid gray;
-}
-
-.non-valid {
-    color: gray;
-    pointer-events: none;
-}
-
-.file-input {
-    width: 100%;
-}
-
-.confirm-modal {
-    margin-top: 2rem;
-    padding: 0.5rem 0.8rem;
-}
-
-.btn-exit-modal {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 1rem;
-    padding: 0.5rem 0.8rem;
-}
-
-.modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-}
-
-.file-input>input {
-    display: none;
+.green-highlight:before {
+    transform: rotate(0.5deg);
+    padding: 0 7px;
 }
 
 #add-category-form {
@@ -369,11 +328,5 @@ th {
 .question-answer {
     width: 40%;
     padding: 0.5rem;
-
-}
-
-.form-label,
-.form-input {
-    width: 100%;
 }
 </style>

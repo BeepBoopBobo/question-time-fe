@@ -5,6 +5,7 @@
   --white: #F0F0F0;
   --pink: #DB3069;
   --green: #4CB944;
+  --highlight-green: rgba(76, 185, 68, 0.5);
   --blue: #2B50AA;
   --yellow: #F5D547;
   --orange: #FA8334;
@@ -33,4 +34,132 @@ h4,
 h5 {
   color: var(--pink);
   font-family: 'Patrick Hand SC', cursive;
+}
+
+.margin-top {
+  margin-top: 1rem;
+}
+
+.btn-group>*:first-child {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.btn-group>*:last-child {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.btn {
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  color: var(--text);
+  font-family: 'Pangolin', cursive;
+}
+
+.btn:hover {
+  color: var(--pink);
+  cursor: pointer;
+}
+
+.btn-fill {
+  padding: 0.5rem;
+  border: 0px solid var(--text);
+  border-radius: 0.5rem;
+  background-color: var(--text);
+  color: var(--white);
+}
+
+.btn-fill:hover {
+  background-color: var(--pink);
+  color: var(--white);
+}
+
+.file-input {
+  width: 100%;
+}
+
+.table-cell {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+td,
+th {
+  padding: 0 10px;
+  border-left: 2px solid var(--text);
+  border-right: 2px solid var(--text);
+}
+
+th {
+  border-bottom: 2px solid var(--text);
+}
+
+#categories-table {
+  width: 60%;
+  margin: auto;
+  border-collapse: collapse;
+}
+
+.non-valid {
+  color: gray;
+  pointer-events: none;
+}
+
+.confirm-modal {
+  margin-top: 2rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.btn-exit-modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.file-input>input {
+  display: none;
+}
+
+.form-label,
+.form-input {
+  width: 100%;
+}
+
+/*HIGHLIGHTS*/
+.green-highlight,
+.highlight {
+  position: relative;
+}
+
+.green-highlight {
+
+  display: inline-block;
+  z-index: 0;
+}
+
+.green-highlight:before {
+  content: "";
+  height: 90%;
+  width: 100%;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding: 0 5px;
+  position: absolute;
+  background: var(--highlight-green);
+  transform: rotate(-0.5deg);
 }

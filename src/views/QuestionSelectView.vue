@@ -42,11 +42,12 @@ export default {
 }
 </script>
 <template>
+    <h3>Select a question:</h3>
     <div id="questions">
-        <div v-for="category in selectedCategories" :key="category.id" class="question-row">
-            <span>{{ category.name }}</span>
+        <div v-for="category in selectedCategories" :key="category.id" class="q-card">
+            <span class="q-name">{{ category.name }}</span>
             <RouterLink :to="`/question/${question.id}`" v-for="question in category.questions" :key="question.id">
-                <button class="question-btn" :class="{ 'disabled': question.used }">
+                <button class="btn q-btn" :class="{ 'disabled': question.used }">
                     {{ question.value }}
                 </button>
             </RouterLink>
@@ -57,21 +58,45 @@ export default {
 <style scoped>
 #questions {
     display: flex;
-    width: 90%;
+    justify-content: center;
+    width: 75%;
+    margin: auto;
     gap: 1rem;
+    height: 500px;
 }
 
-.question-row {
-    text-align: center;
+.q-name {
+    width: 100%;
+    user-select: none;
 }
 
-.question-btn {
-    padding: 1rem;
-    margin: 0.5rem 1rem;
+.q-card {
+    margin-top: 5px;
+    padding: 8px;
+    max-width: 18%;
+    background-color: var(--white);
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    box-shadow: 5px 5px 0 0;
+    min-height: max-content;
+}
+
+.q-card:hover {
+    margin-top: -5px;
+    box-shadow: 5px 10px 5px 5px;
+
+}
+
+.q-card>* {
     width: 100%;
 }
 
-.question-btn.disabled {
+.q-btn {
+    padding: 1rem;
+}
+
+.q-btn.disabled {
     color: red;
     background-color: darkgray;
 }
