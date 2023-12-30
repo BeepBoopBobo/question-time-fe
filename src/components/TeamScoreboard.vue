@@ -34,7 +34,7 @@ export default {
     <div id="scoreboard">
         <div v-for="team in teamsMock" :key="team.id" class="team" :style="`background-color: ${team.color}`"
             :class="{ 'active': team.order }">
-            <span class="team-name">{{ team.name }}</span>
+            <span class="team-name">{{ team.name }}</span> -
             <span class="team-score">{{ team.score }}</span>
         </div>
     </div>
@@ -42,16 +42,17 @@ export default {
 
 <style scoped>
 #scoreboard {
-    width: 100%;
+    width: 80%;
     display: flex;
     justify-content: space-around;
+    gap: 1rem;
+    margin: auto;
 }
 
 .team {
     padding: 0.5rem 1rem;
-    display: flex;
-    flex-wrap: wrap;
     text-align: center;
+    flex-grow: 1;
 }
 
 .team-name,

@@ -28,7 +28,7 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
   background-color: var(--beige);
   width: 80%;
   margin: auto;
-  height: 80vh;
+  height: 85vh;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -43,6 +43,16 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
   background-position: right top,
     /*left bottom,*/
     right bottom;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+#notepad-paper>* {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  height: fit-content;
 }
 
 nav {

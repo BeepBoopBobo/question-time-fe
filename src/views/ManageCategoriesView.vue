@@ -251,21 +251,31 @@ export default {
         <template v-if="categoriesList.length">
             <tr v-for="category, index in categoriesList" :key="index">
                 <td class="table-cell">
-                    <button class="btn" @click="toggleCategory(category._id)">
-                        <font-awesome-icon v-if="isIncluded(category._id)" icon="fa-solid fa-square-check" />
-                        <font-awesome-icon v-else icon="fa-solid fa-square" />
+                    <button class="btn btn-sticker" @click="toggleCategory(category._id)">
+                        <template v-if="isIncluded(category._id)">
+                            <font-awesome-icon class="sticker-outline" icon="fa-solid fa-square-check" />
+                            <font-awesome-icon class="sticker" icon="fa-solid fa-square-check" />
+                        </template>
+                        <template v-else>
+                            <font-awesome-icon class="sticker-outline" icon="fa-solid fa-square" />
+                            <font-awesome-icon class="sticker" icon="fa-solid fa-square" />
+                        </template>
+
                     </button>
                 </td>
                 <td class="table-cell-name">
                     {{ category.name }}
                 </td>
                 <td class="table-cell">
-                    <button class="btn" @click="editCategory(category._id)"><font-awesome-icon
-                            icon="fa-solid fa-pen" /></button>
+                    <button class="btn btn-sticker" @click="editCategory(category._id)">
+                        <font-awesome-icon class="sticker-outline" icon="fa-solid fa-pen" />
+                        <font-awesome-icon class="sticker" icon="fa-solid fa-pen" />
+                    </button>
                 </td>
                 <td class="table-cell">
-                    <button class="btn" @click="removeCategory(category._id)">
-                        <font-awesome-icon icon="fa-solid fa-trash" />
+                    <button class="btn btn-sticker" @click="removeCategory(category._id)">
+                        <font-awesome-icon class="sticker-outline" icon="fa-solid fa-trash" />
+                        <font-awesome-icon class="sticker" icon="fa-solid fa-trash" />
                     </button>
                 </td>
             </tr>
@@ -292,6 +302,45 @@ export default {
 .green-highlight:before {
     transform: rotate(0.5deg);
     padding: 0 7px;
+}
+
+.btn-sticker {
+    position: relative;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    color: var(--orange);
+}
+
+.btn-sticker:hover .sticker {
+    color: var(--white);
+}
+
+.btn-sticker:hover .sticker-outline {
+    stroke: var(--orange);
+}
+
+.sticker {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    right: 0;
+    top: 10%;
+    margin: auto;
+}
+
+.sticker-outline {
+    fill: none;
+    stroke: var(--white);
+    stroke-width: 200;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    top: 10%;
+    margin: auto;
 }
 
 #add-category-form {

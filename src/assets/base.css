@@ -5,7 +5,6 @@
   --white: #F0F0F0;
   --pink: #DB3069;
   --green: #4CB944;
-  --highlight-green: rgba(76, 185, 68, 0.5);
   --blue: #2B50AA;
   --yellow: #F5D547;
   --orange: #FA8334;
@@ -54,9 +53,9 @@ h5 {
 
 .btn {
   border: none;
-  background: none;
   font-size: 1.5rem;
   color: var(--text);
+  background-color: var(--orange);
   font-family: 'Pangolin', cursive;
 }
 
@@ -129,6 +128,7 @@ th {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
+  z-index: 50;
 }
 
 .file-input>input {
@@ -150,16 +150,4 @@ th {
 
   display: inline-block;
   z-index: 0;
-}
-
-.green-highlight:before {
-  content: "";
-  height: 90%;
-  width: 100%;
-  margin-left: -10px;
-  margin-right: -10px;
-  padding: 0 5px;
-  position: absolute;
-  background: var(--highlight-green);
-  transform: rotate(-0.5deg);
 }

@@ -9,7 +9,6 @@ export default {
         const route = useRoute();
         const questionId = computed(() => route.params.id);
         const question = ref({});
-        const x = ref([]);
         const game = useGameStore();
         onMounted(() => {
             fetchQuestion();
@@ -37,7 +36,6 @@ export default {
             question,
             questionId,
             game,
-            x
         }
     }
 }
