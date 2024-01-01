@@ -57,6 +57,11 @@ export default {
     </div>
 </template>
 <style>
+.answer-btn:hover {
+    color: var(--white);
+    outline: 5px solid var(--orange);
+}
+
 #question {
     width: 60%;
     margin: 0 auto 0 auto;
@@ -103,17 +108,17 @@ img {
 }
 
 #answers-container {
-    width: 75%;
+    width: 70%;
     display: flex;
     flex-wrap: wrap;
     margin: auto;
-    gap: 10%;
+    gap: 5%;
 }
 
 .answer-btn {
-    width: 45%;
+    width: 47.5%;
     padding: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     color: var(--white);
     box-shadow: 10px 2px 6px 0px rgba(0, 0, 0, 0.25);
 }
