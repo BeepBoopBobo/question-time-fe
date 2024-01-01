@@ -62,7 +62,8 @@ h5 {
 }
 
 .btn:hover {
-  color: var(--pink);
+  color: var(--orange);
+  background-color: var(--white);
   cursor: pointer;
 }
 

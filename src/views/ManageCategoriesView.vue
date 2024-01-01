@@ -244,79 +244,91 @@ export default {
     <div>
         <span>Selected: {{ selectedCategories.length }}/5</span>
     </div>
+    <div id="category-table" v-if="categoriesList.length">
+        <div class="row" v-for="category, index in categoriesList" :key="index">
 
-    <table id="categories-table">
-        <tr>
-            <th class="table-cell">Select</th>
-            <th class="table-cell-name">Name</th>
-            <th class="table-cell">Edit</th>
-            <th class="table-cell">Delete</th>
-        </tr>
-        <template v-if="categoriesList.length">
-            <tr v-for="category, index in categoriesList" :key="index">
-                <td class="table-cell">
-                    <button class="btn btn-sticker" @click="toggleCategory(category._id)">
-                        <template v-if="isIncluded(category._id)">
-                            <font-awesome-icon class="sticker-outline" icon="fa-solid fa-square-check" />
-                            <font-awesome-icon class="sticker" icon="fa-solid fa-square-check" />
-                        </template>
-                        <template v-else>
-                            <font-awesome-icon class="sticker-outline" icon="fa-solid fa-square" />
-                            <font-awesome-icon class="sticker" icon="fa-solid fa-square" />
-                        </template>
+            <div class="category-name" :class="{ 'selected': isCategorySelected(category._id) }"
+                @click="toggleCategory(category._id)">
+                {{ category.name }}
+            </div>
 
-                    </button>
-                </td>
-                <td class="table-cell-name" :class="{ 'selected': isCategorySelected(category._id) }">
-                    {{ category.name }}
-                </td>
-                <td class="table-cell">
-                    <button class="btn btn-sticker" @click="editCategory(category._id)">
-                        <font-awesome-icon class="sticker-outline" icon="fa-solid fa-pen" />
-                        <font-awesome-icon class="sticker" icon="fa-solid fa-pen" />
-                    </button>
-                </td>
-                <td class="table-cell">
-                    <button class="btn btn-sticker" @click="removeCategory(category._id)">
-                        <font-awesome-icon class="sticker-outline" icon="fa-solid fa-trash" />
-                        <font-awesome-icon class="sticker" icon="fa-solid fa-trash" />
-                    </button>
-                </td>
-            </tr>
-        </template>
-        <template v-else>
-            <font-awesome-icon icon="fa-solid fa-trash" />
-            <span>There are no categories.</span>
-        </template>
-    </table>
-    <button class="btn btn-blue margin-top" @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create
+            <div class="category-btns">
+                <button class="btn btn-sticker" @click="editCategory(category._id)">
+                    <font-awesome-icon class="sticker-outline" icon="fa-solid fa-pen" />
+                    <font-awesome-icon class="sticker" icon="fa-solid fa-pen" />
+                </button>
+                <button class="btn btn-sticker" @click="removeCategory(category._id)">
+                    <font-awesome-icon class="sticker-outline" icon="fa-solid fa-trash" />
+                    <font-awesome-icon class="sticker" icon="fa-solid fa-trash" />
+                </button>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <font-awesome-icon icon="fa-solid fa-trash" />
+        <span>There are no categories.</span>
+    </div>
+
+    <button class="btn btn-org margin-top" @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create
         Category</button>
     <div class="file-input btn-group margin-top">
-        <label class="btn btn-blue">
-            Select JSON file
+        <label class="btn btn-org">
+            Import from JSON
             <input class="hidden " type="file" @change="uploadFromFile" accept="application/JSON">
         </label>
-        <button class="btn btn-blue" :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">
+        <button class="btn btn-org" :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">
             Upload file
         </button>
     </div>
 </template>
 
 <style scoped>
-.selected {
-    color: var(--pink);
+#notepad-paper>* {
+    width: 100%;
 }
 
-.green-highlight:before {
-    transform: rotate(0.5deg);
-    padding: 0 7px;
+.btn-org {
+    max-width: fit-content;
+    margin: auto;
+    margin-top: 1rem;
+    flex-basis: 100%;
+}
+
+#category-table {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row {
+    width: 60%;
+    display: flex;
+    margin: auto;
+}
+
+.category-name {
+    flex-grow: 1;
+    text-align: left;
+    cursor: pointer;
+}
+
+.category-name:hover {
+    filter: brightness(2);
+    /*TODO: change hover color*/
+}
+
+.category-btns {
+    display: flex;
+    justify-content: space-around;
+    width: 20%;
+}
+
+.selected {
+    color: var(--pink);
 }
 
 .btn-sticker {
     position: relative;
     background-color: transparent;
-    width: 100%;
-    height: 100%;
     color: var(--orange);
 }
 
