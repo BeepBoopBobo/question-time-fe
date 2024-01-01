@@ -11,6 +11,7 @@ export default {
         const teamOptions = ref({
             name: "",
             color: "",
+            isTextBlue: false,
             order: 0,
             score: 0,
         })
@@ -26,6 +27,7 @@ export default {
         function clearInputs() {
             teamOptions.value.name = "";
             teamOptions.value.color = "";
+            teamOptions.value.isTextBlue = false;
         }
         function deleteTeam(teamName) {
             console.log("deleting team", teamName);
@@ -57,17 +59,132 @@ export default {
 }
 </script>
 <template>
-    <div id="teams-table">
-        <div v-for="team, index in createdTeams" :key="index">
-            <span>{{ team.name }}</span>
-            <span>{{ team.color }}</span>
-            <button @click="deleteTeam(team.name)">DEL</button>
-        </div>
-    </div>
-    <div>
-        <input type="string" v-model="teamOptions.name" />{{ teamOptions.name }}
-        <input type="color" v-model="teamOptions.color" />{{ teamOptions.color }}
-        <button @click="addTeam">Create Team</button>
+    <h3>Team Creation</h3>
+    <div id="create-team-form">
+        <label class="inp-label">
+            Team name:
+            <div class="inp-group">
+                <input class="inp inp-text" type="string" v-model="teamOptions.name" />
+            </div>
+        </label>
+        <label class="inp-label">
+            Team color:
+            <div class="inp-group">
+                <input class="inp inp-checkbox" type="checkbox" v-model="teamOptions.isTextBlue" />
+                <input class="inp inp-selcol" type="color" v-model="teamOptions.color" />
+                <input class="inp inp-text" type="string" v-model="teamOptions.color">
+            </div>
+        </label>
+        <label class="inp-label">
+            Overview:
+            <div id="team-overview-bar" :style="{ 'background-color': teamOptions.color }">
+                <span :class="{ 'blue-text': teamOptions.isTextBlue }" id="team-overview-name">
+                    {{ teamOptions.name }}
+                </span>
+            </div>
+        </label>
+        <button class="btn btn-org" @click="addTeam">Create Team</button>
     </div>
 </template>
-<style></style>
+<style scoped>
+.btn-org {
+    margin: auto;
+    margin-top: 1rem;
+}
+
+#create-team-form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 40%;
+    margin: auto;
+}
+
+.inp {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.inp-text {
+    height: 2.5rem;
+}
+
+.inp-group {
+    display: flex;
+    align-items: center;
+}
+
+/* Remove default styling of checkbox */
+.inp-checkbox {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 2.5rem;
+    width: 2.5rem;
+    border: none;
+    margin: 0;
+    background-color: var(--white);
+    cursor: pointer;
+}
+
+.inp-checkbox:checked {
+    background-color: var(--text);
+
+}
+
+/* Adjust color input to match height and square shape */
+.inp-selcol {
+    height: 2.5rem;
+    width: 2.5rem;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+
+}
+
+.inp-selcol::-webkit-color-swatch,
+.inp-selcol::-moz-color-swatch {
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+
+.inp-group,
+.inp-label {
+    width: 100%;
+}
+
+.inp-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.inp-label {
+    text-align: left;
+}
+
+.inp-label:not(:first-child) {
+    margin-top: 1rem;
+}
+
+.blue-text {
+    color: var(--text);
+}
+
+.inp-text {
+    flex-grow: 1;
+    text-align: center;
+}
+
+#team-overview-bar {
+    height: 4rem;
+    width: 100%;
+    background-color: black;
+    color: var(--white);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>

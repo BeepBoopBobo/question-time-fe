@@ -85,7 +85,6 @@ export default {
 .q-card:hover {
     margin-top: -5px;
     box-shadow: 5px 10px 5px 5px;
-
 }
 
 .q-card>* {
@@ -94,6 +93,7 @@ export default {
 
 .q-btn {
     padding: 1rem;
+    background-color: var(--white);
 }
 
 .q-btn.disabled {

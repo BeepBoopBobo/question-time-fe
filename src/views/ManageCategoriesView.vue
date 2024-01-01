@@ -63,6 +63,9 @@ export default {
         const categoriesList = ref([]);
         const selectedCategories = ref(game.getSelectedCategories);
 
+        function isCategorySelected(category) {
+            return selectedCategories.value.some(cat => cat == category);
+        }
         function clearInputs() {
             let newObj = {}
             let values = [800, 500, 300, 200, 100];
@@ -178,6 +181,7 @@ export default {
             editingCategory,
             creatingCategory,
             fileContent,
+            isCategorySelected,
             submitCategory,
             clearInputs,
             addCategory,
@@ -236,7 +240,7 @@ export default {
             </div>
         </div>
     </Teleport>
-    <h3 class="green-highlight"><span class="highlight">Manage Categories</span></h3>
+    <h3>Manage Categories</h3>
     <div>
         <span>Selected: {{ selectedCategories.length }}/5</span>
     </div>
@@ -263,7 +267,7 @@ export default {
 
                     </button>
                 </td>
-                <td class="table-cell-name">
+                <td class="table-cell-name" :class="{ 'selected': isCategorySelected(category._id) }">
                     {{ category.name }}
                 </td>
                 <td class="table-cell">
@@ -285,20 +289,24 @@ export default {
             <span>There are no categories.</span>
         </template>
     </table>
-    <button class="btn btn-fill margin-top" @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create
+    <button class="btn btn-blue margin-top" @click="addCategory"> <font-awesome-icon icon="fa-solid fa-plus" /> Create
         Category</button>
     <div class="file-input btn-group margin-top">
-        <label class="btn btn-fill">
+        <label class="btn btn-blue">
             Select JSON file
             <input class="hidden " type="file" @change="uploadFromFile" accept="application/JSON">
         </label>
-        <button class="btn btn-fill" :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">
+        <button class="btn btn-blue" :class="{ 'non-valid': fileContent == null }" @click="addCategoriesFromFile">
             Upload file
         </button>
     </div>
 </template>
 
-<style>
+<style scoped>
+.selected {
+    color: var(--pink);
+}
+
 .green-highlight:before {
     transform: rotate(0.5deg);
     padding: 0 7px;
