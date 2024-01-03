@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useGameStore } from "../stores/game";
+import { RouterLink } from "vue-router";
 
 export default {
     setup() {
@@ -62,12 +63,11 @@ export default {
         });
         const categoriesList = ref([]);
         const selectedCategories = ref(game.getSelectedCategories);
-
         function isCategorySelected(category) {
             return selectedCategories.value.some(cat => cat == category);
         }
         function clearInputs() {
-            let newObj = {}
+            let newObj = {};
             let values = [800, 500, 300, 200, 100];
             newObj.id = '';
             newObj.name = '';
@@ -80,20 +80,17 @@ export default {
                 questionObj.correct_answer = '';
                 questionObj.answers = ['', '', '', ''];
                 newObj.questions.push(questionObj);
-            })
+            });
             categoryForm.value = { ...newObj };
         }
-
         function toggleCategory(identifier) {
             game.toggleCategory(identifier);
         }
-
         function editCategory(identifier) {
             editingCategory.value = true;
             const x = categoriesList.value.find(item => item._id == identifier);
             categoryForm.value = { ...x };
         }
-
         function addCategory() {
             creatingCategory.value = true;
         }
@@ -103,7 +100,7 @@ export default {
             clearInputs();
         }
         function isIncluded(identifier) {
-            return selectedCategories.value?.some(category => category == identifier)
+            return selectedCategories.value?.some(category => category == identifier);
         }
         async function uploadFromFile(event) {
             const files = event.target.files;
@@ -116,7 +113,6 @@ export default {
                 reader.readAsText(selectedFile);
             }
         }
-
         async function addCategoriesFromFile() {
             const formData = new FormData();
             formData.append('categories', fileContent.value);
@@ -126,24 +122,23 @@ export default {
                         'Content-Type': 'application/json',
                     }
                 });
-
                 fetchAllCategories();
                 console.log(response);
                 exitModal();
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(`Error while creating category ${categoryForm.value._id}:`, error.message);
             }
         }
-
         async function submitCategory(method) {
             try {
-                const response =
-                    method == 'create' ?
-                        await axios.post('http://localhost:3000/api/category/', categoryForm.value) :
-                        await axios.put('http://localhost:3000/api/category/', categoryForm.value);
+                const response = method == 'create' ?
+                    await axios.post('http://localhost:3000/api/category/', categoryForm.value) :
+                    await axios.put('http://localhost:3000/api/category/', categoryForm.value);
                 fetchAllCategories();
                 exitModal();
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(`Error while ${method == 'create' ? 'creating' : 'editing'} category ${categoryForm.value._id}:`, error.message);
                 creatingCategory.value = false;
                 editingCategory.value = false;
@@ -151,31 +146,29 @@ export default {
             creatingCategory.value = false;
             editingCategory.value = false;
         }
-
         async function removeCategory(categoryID) {
             try {
                 const response = await axios.delete(`http://localhost:3000/api/category/${categoryID}`);
                 fetchAllCategories();
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(`Error while deleting category ${categoryID}:`, error.message);
             }
         }
-
         async function fetchAllCategories() {
             try {
-                console.log('fetching categories')
+                console.log('fetching categories');
                 const response = await axios.get('http://localhost:3000/api/categories/');
                 categoriesList.value = response.data.categories;
                 console.log("resp", response.data);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error('Error fetching categories:', error.message);
             }
         }
-
         onMounted(() => {
             fetchAllCategories();
-        })
-
+        });
         return {
             categoryForm,
             editingCategory,
@@ -194,8 +187,9 @@ export default {
             isIncluded,
             editCategory,
             exitModal
-        }
-    }
+        };
+    },
+    components: { RouterLink }
 }
 </script>
 <template>
@@ -280,6 +274,11 @@ export default {
             Upload file
         </button>
     </div>
+    <RouterLink to="/categories">
+        <button class="btn btn-org">
+            Start
+        </button>
+    </RouterLink>
 </template>
 
 <style scoped>
@@ -329,15 +328,15 @@ export default {
 .btn-sticker {
     position: relative;
     background-color: transparent;
-    color: var(--orange);
-}
-
-.btn-sticker:hover .sticker {
     color: var(--white);
 }
 
+.btn-sticker:hover .sticker {
+    color: var(--orange);
+}
+
 .btn-sticker:hover .sticker-outline {
-    stroke: var(--orange);
+    stroke: var(--white);
 }
 
 .sticker {
@@ -352,7 +351,7 @@ export default {
 
 .sticker-outline {
     fill: none;
-    stroke: var(--white);
+    stroke: var(--orange);
     stroke-width: 200;
     position: absolute;
     z-index: 0;

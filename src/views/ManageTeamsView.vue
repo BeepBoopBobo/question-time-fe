@@ -2,60 +2,58 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useGameStore } from "../stores/game";
+import { RouterLink } from "vue-router";
 
 export default {
     setup() {
         const game = useGameStore();
-        let createdTeams = ref(game.getTeams);
-
+        const createdTeams = ref(game.getTeams);
         const teamOptions = ref({
             name: "",
-            color: "",
+            color: "#000000",
             isTextBlue: false,
             order: 0,
             score: 0,
-        })
+        });
         const categories = ref(null);
-
-        function addTeam() {
-            //check if the name is not already used
-            const highestOrder = Math.max(createdTeams.value.map(team => team.order));
-            teamOptions.value.order = highestOrder + 1;
-            game.addTeam(teamOptions.value);
+        async function addTeam() {
+            const highestOrder = Math.max(createdTeams.value.map(team => team.order)) || 0;
+            teamOptions.value.order = highestOrder++;
+            let passedObj = { ...teamOptions.value };
+            game.addTeam(passedObj);
             clearInputs();
         }
         function clearInputs() {
             teamOptions.value.name = "";
-            teamOptions.value.color = "";
+            teamOptions.value.color = "#000000";
             teamOptions.value.isTextBlue = false;
         }
         function deleteTeam(teamName) {
-            console.log("deleting team", teamName);
-
             game.removeTeam(teamName);
         }
         onMounted(() => {
             fetchTeams();
-        })
-
+        });
         async function fetchTeams() {
             try {
                 const response = await axios.get('http://localhost:3000/api/categories/');
                 categories.value = response.data;
                 console.log("resp", response.data);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error('Error fetching players:', error);
             }
         }
         return {
-            clearInputs,
             addTeam,
+            clearInputs,
             deleteTeam,
             createdTeams,
             teamOptions,
             categories
-        }
-    }
+        };
+    },
+    components: { RouterLink }
 }
 </script>
 <template>
@@ -85,6 +83,11 @@ export default {
         </label>
         <button class="btn btn-org" @click="addTeam">Create Team</button>
     </div>
+    <RouterLink to="/manage-categories">
+        <button class="btn btn-org">
+            Next
+        </button>
+    </RouterLink>
 </template>
 <style scoped>
 .btn-org {

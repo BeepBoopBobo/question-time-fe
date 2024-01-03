@@ -45,7 +45,7 @@ export default {
     <h3 class="id-card">{{ question.id }} </h3>
     <span id="question">{{ question.name }}</span>
     <div id="image-container">
-        <img id="image" src="">
+        <img id="image" :src="question.image">
         <div id="image-tape"></div>
     </div>
     <div id="answers-container">
@@ -81,7 +81,7 @@ export default {
     right: 0;
 }
 
-img {
+#image {
     z-index: 1;
     width: 40%;
     margin-top: 1.2rem;
@@ -89,6 +89,7 @@ img {
     background-color: var(--blue);
     border: 1rem solid var(--white);
     box-sizing: border-box;
+    object-fit: cover;
 }
 
 .id-card {

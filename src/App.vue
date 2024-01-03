@@ -7,8 +7,8 @@ import TeamScoreboard from './components/TeamScoreboard.vue';
   <header>
     <nav>
       <RouterLink class="nav-link" to="/">How to</RouterLink>
-      <RouterLink class="nav-link" to="/manage-categories">Manage Categories</RouterLink>
       <RouterLink class="nav-link" to="/manage-teams">Manage Teams</RouterLink>
+      <RouterLink class="nav-link" to="/manage-categories">Manage Categories</RouterLink>
       <RouterLink class="nav-link" to="/categories">Play</RouterLink>
       <a class="nav-link" href="http://localhost:3000/api-docs">Swagger</a>
     </nav>

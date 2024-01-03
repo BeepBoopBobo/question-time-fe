@@ -5,26 +5,7 @@ export const useGameStore = defineStore({
     state: () => ({
         turn: 0,
         selectedCategories: [],
-        teams: [
-            {
-                name: "ABC",
-                color: "#fff",
-                order: 0,
-                score: 0,
-            },
-            {
-                name: "123",
-                color: "#3d3d3d",
-                order: 1,
-                score: 0,
-            },
-            {
-                name: "XYZ",
-                color: "#AA1560",
-                order: 2,
-                score: 0,
-            },
-        ]
+        teams: []
     }),
     actions: {
         addPointsToTeam(team, pointAmount) {
@@ -54,7 +35,9 @@ export const useGameStore = defineStore({
         }
     },
     getters: {
-        getTeams() { return this.teams },
+        getTeams() {
+            return this.teams
+        },
         getTurn() { return this.turn },
         getSelectedCategories() { return this.selectedCategories },
     }

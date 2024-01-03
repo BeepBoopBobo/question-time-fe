@@ -5,42 +5,28 @@ import { useGameStore } from "../stores/game";
 export default {
     setup() {
         const game = useGameStore();
-        const teams = ref(null);
+        const teams = game.getTeams
 
-        let teamsMock = ref(game.getTeams)
-
-        onMounted(() => {
-            getTeams();
-        });
-
-        async function getTeams() {
-            try {
-                const response = await axios.get('http://localhost:3000/api/teams/');
-                teams.value = response.data;
-                console.log("resp", response.data);
-            }
-            catch (error) {
-                console.error('Error fetching teams:', error);
-            }
-        }
         return {
             teams,
-            teamsMock
         };
     },
 }
 </script>
 <template>
     <div id="scoreboard">
-        <div v-for="team in teamsMock" :key="team.id" class="team" :style="`background-color: ${team.color}`"
-            :class="{ 'active': team.order }">
-            <span class="team-name">{{ team.name }}</span> -
-            <span class="team-score">{{ team.score }}</span>
+        <div v-for="team in teams" :key="team.id" class="team" :style="`background-color: ${team.color}`"
+            :class="{ 'active': team.order, 'text-blue': team.isTextBlue }">
+            {{ team.name }} - {{ team.score }}
         </div>
     </div>
 </template>
 
 <style scoped>
+.team.text-blue {
+    color: var(--text);
+}
+
 #scoreboard {
     width: 80%;
     display: flex;
@@ -53,6 +39,7 @@ export default {
     padding: 0.5rem 1rem;
     text-align: center;
     flex-grow: 1;
+    color: var(--white);
 }
 
 .team-name,
